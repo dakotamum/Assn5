@@ -118,6 +118,7 @@ public class Viewer extends Application
                         rectangle.setTranslateY(0);
                         rectangle.setHeight(dy);
                     }
+                    setShapeHandler(rectangle);
                 }
 
                 if (toolPane.ellBtnSelected())
@@ -146,14 +147,55 @@ public class Viewer extends Application
                         ell.setCenterY(dy/2);
                         ell.setRadiusY(dy/2);
                     }
-
+                    setShapeHandler(ell);
                 }
 
                 if (toolPane.freeBtnSelected())
                 {
                     path.getElements().add(new LineTo(event.getX(), event.getY()));
+                    setShapeHandler(path);
                 }
             }
         });
     }
+
+    private void setShapeHandler(Shape shape)
+    {
+
+            shape.setOnMousePressed(new EventHandler<MouseEvent>()
+            {
+                @Override
+                public void handle(MouseEvent event)
+                {
+                    if(toolPane.editBtnSelected())
+                    {
+                        deltaX = event.getX();
+                        deltaY = event.getY();
+                        if(shape.equals(rectangle))
+                        {
+                            double xpos = rectangle.getX();
+                            double ypos = rectangle.getY();
+                            double xwidth = rectangle.getWidth();
+                            double ywidth = rectangle.getHeight();
+                            rectangle = new Rectangle(xpos, ypos, xwidth, ywidth);
+                            drawPane.getChildren().add(rectangle);
+                        }
+                    }
+                }
+            });
+
+            shape.setOnMouseDragged(new EventHandler<MouseEvent>()
+            {
+                @Override
+                public void handle(MouseEvent event)
+                {
+                    if(toolPane.editBtnSelected())
+                    {
+                        shape.setTranslateX(shape.getTranslateX() + event.getX() - deltaX);
+                        shape.setTranslateY(shape.getTranslateY() + event.getY() - deltaY);
+                    }
+                }
+            });
+            }
+
 }
