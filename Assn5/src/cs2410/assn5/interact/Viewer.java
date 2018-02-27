@@ -60,7 +60,7 @@ public class Viewer extends Application
                 if (toolPane.ellBtnSelected())
                 {
                     ell = new Ellipse();
-                    drawPane.getChildren().add(ell);
+
                     ell.setFill(toolPane.getFillPickerValue());
                     ell.setStroke(toolPane.getStrokePickerValue());
                     ell.setStrokeWidth(toolPane.getStrokeSizeValue());
@@ -68,6 +68,7 @@ public class Viewer extends Application
                     deltaX = ell.getLayoutX();
                     ell.setLayoutY(event.getY());
                     deltaY = ell.getLayoutY();
+                    drawPane.getChildren().add(ell);
                 }
 
                 if (toolPane.freeBtnSelected())
@@ -77,6 +78,11 @@ public class Viewer extends Application
                     path.setStroke(toolPane.getStrokePickerValue());
                     path.setStrokeWidth(toolPane.getStrokeSizeValue());
                     path.getElements().add(new MoveTo(event.getX(), event.getY()));
+                }
+
+                if (toolPane.eraseBtnSelected())
+                {
+                    drawPane.getChildren().remove(event.getTarget());
                 }
             }
         });
@@ -140,6 +146,7 @@ public class Viewer extends Application
                         ell.setCenterY(dy/2);
                         ell.setRadiusY(dy/2);
                     }
+
                 }
 
                 if (toolPane.freeBtnSelected())
