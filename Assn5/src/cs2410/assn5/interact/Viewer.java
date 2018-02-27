@@ -3,10 +3,13 @@ package cs2410.assn5.interact;
 import cs2410.assn5.tools.DrawingPane;
 import cs2410.assn5.tools.ToolPane;
 import javafx.application.Application;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.*;
 import javafx.stage.Stage;
 
@@ -22,7 +25,7 @@ public class Viewer extends Application
     Rectangle rectangle;
     Ellipse ell;
     Path path;
-
+    EventHandler<ActionEvent> someEvent;
     public static void main(String[] args)
     {
         launch(args);
@@ -39,6 +42,8 @@ public class Viewer extends Application
         primaryStage.setScene(someScene);
         primaryStage.setResizable(false);
         primaryStage.show();
+
+
 
         drawPane.setOnMousePressed(new EventHandler<MouseEvent>()
         {
@@ -78,11 +83,6 @@ public class Viewer extends Application
                     path.setStroke(toolPane.getStrokePickerValue());
                     path.setStrokeWidth(toolPane.getStrokeSizeValue());
                     path.getElements().add(new MoveTo(event.getX(), event.getY()));
-                }
-
-                if (toolPane.eraseBtnSelected())
-                {
-                    drawPane.getChildren().remove(event.getTarget());
                 }
             }
         });
@@ -162,7 +162,7 @@ public class Viewer extends Application
     private void setShapeHandler(Shape shape)
     {
 
-            shape.setOnMousePressed(new EventHandler<MouseEvent>()
+        shape.setOnMousePressed(new EventHandler<MouseEvent>()
             {
                 @Override
                 public void handle(MouseEvent event)
@@ -171,15 +171,16 @@ public class Viewer extends Application
                     {
                         deltaX = event.getX();
                         deltaY = event.getY();
-                        if(shape.equals(rectangle))
-                        {
-                            double xpos = rectangle.getX();
-                            double ypos = rectangle.getY();
-                            double xwidth = rectangle.getWidth();
-                            double ywidth = rectangle.getHeight();
-                            rectangle = new Rectangle(xpos, ypos, xwidth, ywidth);
-                            drawPane.getChildren().add(rectangle);
-                        }
+
+                        drawPane.getChildren().remove(shape);
+                        drawPane.getChildren().add(shape);
+
+                        toolPane.setFillPickerAction(someEvent);
+                    }
+
+                    else if(toolPane.eraseBtnSelected())
+                    {
+                        drawPane.getChildren().remove(shape);
                     }
                 }
             });
@@ -196,6 +197,6 @@ public class Viewer extends Application
                     }
                 }
             });
-            }
+    }
 
 }
