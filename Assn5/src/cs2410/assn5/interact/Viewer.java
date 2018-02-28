@@ -25,7 +25,8 @@ public class Viewer extends Application
     Rectangle rectangle;
     Ellipse ell;
     Path path;
-    EventHandler<ActionEvent> someEvent;
+    Shape selectedShape;
+
     public static void main(String[] args)
     {
         launch(args);
@@ -42,8 +43,6 @@ public class Viewer extends Application
         primaryStage.setScene(someScene);
         primaryStage.setResizable(false);
         primaryStage.show();
-
-
 
         drawPane.setOnMousePressed(new EventHandler<MouseEvent>()
         {
@@ -98,6 +97,7 @@ public class Viewer extends Application
                     double dy = event.getY() - deltaY;
 
 
+                    selectedShape = null;
                     if (dx < 0)
                     {
                         rectangle.setTranslateX(dx);
@@ -159,44 +159,63 @@ public class Viewer extends Application
         });
     }
 
+    EventHandler<ActionEvent> pickerAction = new EventHandler<ActionEvent>()
+    {
+        public void handle(ActionEvent event)
+        {
+            if (selectedShape instanceof Rectangle || selectedShape instanceof Ellipse)
+            {
+                selectedShape.setFill(toolPane.getFillPickerValue());
+                selectedShape = null;
+            }
+        }
+    };
+
+
     private void setShapeHandler(Shape shape)
     {
 
         shape.setOnMousePressed(new EventHandler<MouseEvent>()
+        {
+            @Override
+            public void handle(MouseEvent event)
             {
-                @Override
-                public void handle(MouseEvent event)
+                if(toolPane.editBtnSelected())
                 {
-                    if(toolPane.editBtnSelected())
-                    {
-                        deltaX = event.getX();
-                        deltaY = event.getY();
+                    deltaX = event.getX();
+                    deltaY = event.getY();
 
-                        drawPane.getChildren().remove(shape);
-                        drawPane.getChildren().add(shape);
 
-                        toolPane.setFillPickerAction(someEvent);
-                    }
+                    drawPane.getChildren().remove(shape);
+                    drawPane.getChildren().add(shape);
+                    toolPane.setFillPickerValue((Color)shape.getFill());
+                    toolPane.setStrokePickerValue((Color)shape.getStroke());
+                    toolPane.setStrokeSizeValue((int)shape.getStrokeWidth());
 
-                    else if(toolPane.eraseBtnSelected())
-                    {
-                        drawPane.getChildren().remove(shape);
-                    }
+                    selectedShape = shape;
+                    toolPane.setFillPickerAction(pickerAction);
+
                 }
-            });
 
-            shape.setOnMouseDragged(new EventHandler<MouseEvent>()
+                else if(toolPane.eraseBtnSelected())
+                {
+                    drawPane.getChildren().remove(shape);
+                }
+            }
+        });
+
+        shape.setOnMouseDragged(new EventHandler<MouseEvent>()
+        {
+            @Override
+            public void handle(MouseEvent event)
             {
-                @Override
-                public void handle(MouseEvent event)
+                if(toolPane.editBtnSelected())
                 {
-                    if(toolPane.editBtnSelected())
-                    {
-                        shape.setTranslateX(shape.getTranslateX() + event.getX() - deltaX);
-                        shape.setTranslateY(shape.getTranslateY() + event.getY() - deltaY);
-                    }
+                    shape.setTranslateX(shape.getTranslateX() + event.getX() - deltaX);
+                    shape.setTranslateY(shape.getTranslateY() + event.getY() - deltaY);
                 }
-            });
+            }
+        });
     }
 
 }

@@ -31,6 +31,7 @@ public class ToolPane extends HBox {
     private ToggleButton ellBtn = new ToggleButton("Ellipse");
     private ToggleButton rectBtn = new ToggleButton("Rectangle");
     private ToggleButton freeBtn = new ToggleButton("Freehand");
+
     public ToolPane() {
         this.getChildren().addAll(fillText, fillPicker, strokeText,
                 strokePicker, strokeSize, editBtn, eraseBtn,
@@ -47,60 +48,47 @@ public class ToolPane extends HBox {
         this.setPadding(new Insets(5, 5, 5, 5));
         this.setSpacing(5);
     }
-    public void setFillPickerAction(EventHandler<ActionEvent> event)
-    {
+
+    public void setFillPickerAction(EventHandler<ActionEvent> event) {
         fillPicker.setOnAction(event);
     }
-    public void setFillPickerValue(Color color)
-    {
+    public void setFillPickerValue(Color color) {
         fillPicker.setValue(color);
     }
-    public Color getFillPickerValue()
-    {
+    public Color getFillPickerValue() {
         return fillPicker.getValue();
     }
-    public void setStrokePickerAction(EventHandler<ActionEvent> event)
-    {
+    public void setStrokePickerAction(EventHandler<ActionEvent> event) {
         strokePicker.setOnAction(event);
     }
-    public void setStrokePickerValue(Color color)
-    {
+    public void setStrokePickerValue(Color color) {
         strokePicker.setValue(color);
     }
-    public Color getStrokePickerValue()
-    {
+    public Color getStrokePickerValue() {
         return strokePicker.getValue();
     }
-    public void setStrokeSizeAction(EventHandler<ActionEvent> event )
-    {
+    public void setStrokeSizeAction(EventHandler<ActionEvent> event ) {
         strokeSize.setOnAction(event);
     }
-    public void setStrokeSizeValue(Integer val)
-    {
+    public void setStrokeSizeValue(Integer val) {
         strokeSize.setValue(val);
     }
-    public Integer getStrokeSizeValue()
-    {
+    public Integer getStrokeSizeValue() {
         return strokeSize.getValue();
     }
-    public boolean editBtnSelected()
-    {
+    public boolean editBtnSelected() {
         return editBtn.isSelected();
     }
-    public boolean eraseBtnSelected()
-    {
+    public boolean eraseBtnSelected() {
         return eraseBtn.isSelected();
     }
-    public boolean ellBtnSelected()
-    {
+    public boolean ellBtnSelected() {
         return ellBtn.isSelected();
     }
-    public boolean rectBtnSelected()
-    {
+    public boolean rectBtnSelected() {
         return rectBtn.isSelected();
     }
-    public boolean freeBtnSelected()
-    {
+    public boolean freeBtnSelected() {
         return freeBtn.isSelected();
     }
 }
