@@ -33,9 +33,7 @@ public class ToolPane extends HBox {
     private ToggleButton freeBtn = new ToggleButton("Freehand");
 
     public ToolPane() {
-        this.getChildren().addAll(fillText, fillPicker, strokeText,
-                strokePicker, strokeSize, editBtn, eraseBtn,
-                ellBtn, rectBtn, freeBtn);
+        this.getChildren().addAll(fillText, fillPicker, strokeText, strokePicker, strokeSize, editBtn, eraseBtn, ellBtn, rectBtn, freeBtn);
         ToggleGroup toggleGroup = new ToggleGroup();
         //adding ToggleButtons to a ToggleGroup makes it so only one can be selected at a time.
         toggleGroup.getToggles().addAll(editBtn, eraseBtn, ellBtn, rectBtn, freeBtn);
