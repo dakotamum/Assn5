@@ -31,6 +31,7 @@ public class ToolPane extends HBox {
     private ToggleButton ellBtn = new ToggleButton("Ellipse");
     private ToggleButton rectBtn = new ToggleButton("Rectangle");
     private ToggleButton freeBtn = new ToggleButton("Freehand");
+
     public ToolPane() {
         this.getChildren().addAll(fillText, fillPicker, strokeText,
                 strokePicker, strokeSize, editBtn, eraseBtn,
@@ -47,6 +48,7 @@ public class ToolPane extends HBox {
         this.setPadding(new Insets(5, 5, 5, 5));
         this.setSpacing(5);
     }
+
     public void setFillPickerAction(EventHandler<ActionEvent> event) {
         fillPicker.setOnAction(event);
     }

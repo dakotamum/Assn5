@@ -3,10 +3,13 @@ package cs2410.assn5.interact;
 import cs2410.assn5.tools.DrawingPane;
 import cs2410.assn5.tools.ToolPane;
 import javafx.application.Application;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.*;
 import javafx.stage.Stage;
 
@@ -22,6 +25,7 @@ public class Viewer extends Application
     Rectangle rectangle;
     Ellipse ell;
     Path path;
+    Shape selectedShape;
 
     public static void main(String[] args)
     {
@@ -79,11 +83,6 @@ public class Viewer extends Application
                     path.setStrokeWidth(toolPane.getStrokeSizeValue());
                     path.getElements().add(new MoveTo(event.getX(), event.getY()));
                 }
-
-                if (toolPane.eraseBtnSelected())
-                {
-                    drawPane.getChildren().remove(event.getTarget());
-                }
             }
         });
 
@@ -98,6 +97,7 @@ public class Viewer extends Application
                     double dy = event.getY() - deltaY;
 
 
+                    selectedShape = null;
                     if (dx < 0)
                     {
                         rectangle.setTranslateX(dx);
@@ -159,43 +159,63 @@ public class Viewer extends Application
         });
     }
 
+    EventHandler<ActionEvent> pickerAction = new EventHandler<ActionEvent>()
+    {
+        public void handle(ActionEvent event)
+        {
+            if (selectedShape instanceof Rectangle || selectedShape instanceof Ellipse)
+            {
+                selectedShape.setFill(toolPane.getFillPickerValue());
+                selectedShape = null;
+            }
+        }
+    };
+
+
     private void setShapeHandler(Shape shape)
     {
 
-            shape.setOnMousePressed(new EventHandler<MouseEvent>()
+        shape.setOnMousePressed(new EventHandler<MouseEvent>()
+        {
+            @Override
+            public void handle(MouseEvent event)
             {
-                @Override
-                public void handle(MouseEvent event)
+                if(toolPane.editBtnSelected())
                 {
-                    if(toolPane.editBtnSelected())
-                    {
-                        deltaX = event.getX();
-                        deltaY = event.getY();
-                        if(shape.equals(rectangle))
-                        {
-                            double xpos = rectangle.getX();
-                            double ypos = rectangle.getY();
-                            double xwidth = rectangle.getWidth();
-                            double ywidth = rectangle.getHeight();
-                            rectangle = new Rectangle(xpos, ypos, xwidth, ywidth);
-                            drawPane.getChildren().add(rectangle);
-                        }
-                    }
-                }
-            });
+                    deltaX = event.getX();
+                    deltaY = event.getY();
 
-            shape.setOnMouseDragged(new EventHandler<MouseEvent>()
-            {
-                @Override
-                public void handle(MouseEvent event)
-                {
-                    if(toolPane.editBtnSelected())
-                    {
-                        shape.setTranslateX(shape.getTranslateX() + event.getX() - deltaX);
-                        shape.setTranslateY(shape.getTranslateY() + event.getY() - deltaY);
-                    }
+
+                    drawPane.getChildren().remove(shape);
+                    drawPane.getChildren().add(shape);
+                    toolPane.setFillPickerValue((Color)shape.getFill());
+                    toolPane.setStrokePickerValue((Color)shape.getStroke());
+                    toolPane.setStrokeSizeValue((int)shape.getStrokeWidth());
+
+                    selectedShape = shape;
+                    toolPane.setFillPickerAction(pickerAction);
+
                 }
-            });
+
+                else if(toolPane.eraseBtnSelected())
+                {
+                    drawPane.getChildren().remove(shape);
+                }
             }
+        });
+
+        shape.setOnMouseDragged(new EventHandler<MouseEvent>()
+        {
+            @Override
+            public void handle(MouseEvent event)
+            {
+                if(toolPane.editBtnSelected())
+                {
+                    shape.setTranslateX(shape.getTranslateX() + event.getX() - deltaX);
+                    shape.setTranslateY(shape.getTranslateY() + event.getY() - deltaY);
+                }
+            }
+        });
+    }
 
 }
